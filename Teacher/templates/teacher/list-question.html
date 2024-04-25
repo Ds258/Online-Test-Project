@@ -1,0 +1,113 @@
+{% extends 'teacher/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+
+{% block title %} List of Questions {% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-3 text-gray-800">Questions Table</h1>
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <div class="input-group col-md-9">
+                <div class="form-outline" data-mdb-input-init>
+                    <input type="search" id="searchQuestion" class="form-control" placeholder="Search Question.."/>
+                </div>
+                <div class="ml-3">
+                    <select id="selectSubject" class="selectpicker form-control" multiple
+                            data-selected-text-format="count" aria-label="Default select example"
+                            data-live-search="true">
+                        {% for subject in all_subject %}
+                        <option data-tokens="{{ subject.type }}" value="{{ subject.type }}">{{ subject.type }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="ml-3">
+                    <select class="form-select" id="selectActive" aria-label="Select Active">
+                        <option value="" selected>Active</option>
+                        <option value="On">On</option>
+                        <option value="Off">Off</option>
+                    </select>
+                </div>
+                <div class="ml-3 form-inline">
+                    <label for="selectNum">Show</label>
+                    <select id="selectNum" class="selectpicker form-control" aria-label="Default select example">
+                        <option value="5" selected>5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+            </div>
+            <!--            <a class="btn btn-primary" role="button" href="{% url 'Teacher:CreateQuickTestView' %}">Create Quick Test</a>-->
+            <a class="btn btn-primary" role="button" href="{% url 'Teacher:CreateQuestionView' %}">Create Question</a>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th style="width: 60%">Name</th>
+                        <th>Subject</th>
+                        <th>Created at</th>
+                        <th>Active</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th>Name</th>
+                        <th>Subject</th>
+                        <th>Created at</th>
+                        <th>Active</th>
+                        <th></th>
+                    </tr>
+                    </tfoot>
+                    <tbody id="dataQuestion">
+<!--                        {% for question in all_question %}-->
+<!--                        <tr class="table-row" data-subject="{{ question.subject }}" data-active="{{ question.is_active }}">-->
+<!--                            <td><a href="{% url 'Teacher:EditQuestionView' question.id %}">{{ question.name }}</a></td>-->
+<!--                            <td>{{ question.subject }}</td>-->
+<!--                            <td>{{ question.created_at }}</td>-->
+<!--                            <td>{{ question.is_active }}</td>-->
+<!--                        </tr>-->
+<!--                        {% endfor %}-->
+                    </tbody>
+                </table>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-end">
+<!--                        <li class="page-item">-->
+<!--                            <a class="page-link" aria-label="Previous" onclick="navigate('previous')">-->
+<!--                                <span aria-hidden="true">&laquo;</span>-->
+<!--                                <span class="sr-only">Previous</span>-->
+<!--                            </a>-->
+<!--                        </li>-->
+<!--                        {% for i in page_list|slice:":2" %}-->
+<!--                        <li class="page-item"><a class="page-link" onclick="AjaxPagination()">{{i}}</a></li>-->
+<!--                        {% endfor %}-->
+<!--                        <li class="page-item">-->
+<!--                            <a class="page-link" aria-label="Next" onclick="navigate('next')">-->
+<!--                                <span aria-hidden="true">&raquo;</span>-->
+<!--                                <span class="sr-only">Next</span>-->
+<!--                            </a>-->
+<!--                        </li>-->
+                    </ul>
+                    <input type="hidden" id="page_list" value="{{ page_list|length }}">
+                </nav>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<script src="{% static 'teacher/js/question/filter-question.js' %}"></script>-->
+<script src="{% static 'teacher/js/question/ajax-pagination.js' %}"></script>
+<!--<script src="{% static 'teacher/js/question/datatable-question.js' %}"></script>-->
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+
+{% block title %} Sign up {% endblock %}
+
+{% block content %}
+<div>
+    <!-- Section: Design Block -->
+    <section class="text-center text-lg-start">
+        <style>
+            .cascading-right {
+              margin-right: -50px;
+            }
+
+            @media (max-width: 991.98px) {
+              .cascading-right {
+                margin-right: 0;
+              }
+            }
+        </style>
+
+        <!-- Jumbotron -->
+        <div class="container py-4">
+            <div class="row g-0 align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <div class="card cascading-right" style="
+            background: hsla(0, 0%, 100%, 0.55);
+            backdrop-filter: blur(30px);
+            ">
+                        <div class="card-body p-5 shadow-5 text-center">
+                            <h2 class="fw-bold mb-5">Sign up now</h2>
+                            <form id="signup-form" action="" method="post">
+                                {% csrf_token %}
+                                <!-- 2 column grid layout with text inputs for the first and last names -->
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <div class="form-outline">
+                                            <input type="text" id="fnameForm" class="form-control" name="inputFirstName"/>
+                                            <label class="form-label" for="fnameForm">First name</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <div class="form-outline">
+                                            <input type="text" id="lnameForm" class="form-control" name="inputLastName"/>
+                                            <label class="form-label" for="lnameForm">Last name</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Username input -->
+                                <div class="form-outline mb-4">
+                                    <input type="text" id="usernameForm" class="form-control" name="inputUsername"/>
+                                    <label class="form-label" for="usernameForm">Username</label>
+                                </div>
+
+                                <!-- Email input -->
+                                <div class="form-outline mb-4">
+                                    <input type="email" id="emailForm" class="form-control" name="inputEmail"/>
+                                    <label class="form-label" for="emailForm">Email address</label>
+                                </div>
+
+                                <!-- Password input -->
+                                <div class="form-outline mb-4">
+                                    <input type="password" id="passwordForm" class="form-control" name="inputPassword"/>
+                                    <label class="form-label" for="passwordForm">Password</label>
+                                </div>
+
+                                <!-- Submit button -->
+                                <button type="submit" class="btn btn-primary btn-block mb-4" onclick="Signup()">
+                                    Sign up
+                                </button>
+
+                                <!-- Register buttons -->
+                                <div class="text-center">
+                                    <p>or sign up with:</p>
+                                    <button type="button" class="btn btn-link btn-floating mx-1">
+                                        <i class="fa fa-facebook"></i>
+                                    </button>
+
+                                    <button type="button" class="btn btn-link btn-floating mx-1">
+                                        <i class="fa fa-google"></i>
+                                    </button>
+
+                                    <button type="button" class="btn btn-link btn-floating mx-1">
+                                        <i class="fa fa-twitter"></i>
+                                    </button>
+
+                                    <button type="button" class="btn btn-link btn-floating mx-1">
+                                        <i class="fa fa-github"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <img src="https://mdbootstrap.com/img/new/ecommerce/vertical/004.jpg"
+                         class="w-100 rounded-4 shadow-4"
+                         alt=""/>
+                </div>
+            </div>
+        </div>
+        <!-- Jumbotron -->
+    </section>
+    <!-- Section: Design Block -->
+</div>
+<script src="{% static 'core/js/validate.js' %}"></script>
+{% endblock %}
+<!-- Section: Design Block -->

@@ -1,0 +1,261 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+
+{% block title %} Test {% endblock %}
+
+{% block content %}
+<!-- Hero-area -->
+<div class="hero-area section">
+    <!-- Background Image -->
+    <div class="bg-image bg-parallax overlay"
+         style="background-image:url({% static 'core/img/page-background.jpg' %})"></div>
+    <!-- /Background Image -->
+    <div class="container" style="position: relative; z-index: 1;">
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-md-offset-1 text-center">
+                <ul class="hero-area-tree">
+                    <li><a href="{% url 'Core:Index' %}">Home</a></li>
+                    <li>Test</li>
+                </ul>
+                <h1 class="white-text">Test</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Hero-area -->
+<!-- Blog -->
+<div id="blog" class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <!-- main blog -->
+            <div id="main" class="col-md-9">
+                <div class="mb-3 row d-flex">
+                    <!-- Search form -->
+                    <div class="col-md-6">
+                        <input class="form-control" id="searchTest" type="text" placeholder="Search" aria-label="Search">
+                    </div>
+                    <div class="col-md-3">
+                        <select id="selectSubject" class="selectpicker form-control" multiple
+                                data-selected-text-format="count" aria-label="Default select example"
+                                data-live-search="true">
+                            {% for subject in subject %}
+                            <option data-tokens="{{ subject.type }}" value="{{ subject.type }}">{{ subject.type }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% if request.user.is_authenticated %}
+                    <div class="col-md-3 d-flex align-items-center">
+                        <input style="margin-right: 5px;" type="checkbox" id="favorite" name="favorite" value="Bike">
+                        <label for="favorite">Favorite</label><br>
+                    </div>
+                    {% endif %}
+                </div>
+                <!-- row -->
+                <div class="row" id="listTest">
+                    {% for test in test %}
+                    {% if test.is_active %}
+                    <div class="col-md-6">
+                        <div class="single-blog">
+                            <div class="col-lg-4 mb-4">
+                                <form action="{% url 'Test:TestIndexView' %}" method="post" id="test_form_{{ test.id }}">
+                                    {% csrf_token %}
+<!--                                    <input type="hidden" name="test_id" value="{{ test.id }}">-->
+                                    <div class="card">
+                                        {% if test.favor %}
+                                        <span class="favorite-star favorited" style="position: absolute; bottom: 10px; right: 10px;" onclick="toggleFavorite(this, {{ test.id }})">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star">
+                                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                            </svg>
+                                        </span>
+                                        {% else %}
+                                        <span class="favorite-star" style="position: absolute; bottom: 10px; right: 10px;" onclick="toggleFavorite(this, {{ test.id }})">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star">
+                                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                            </svg>
+                                        </span>
+                                        {% endif %}
+                                        <div class="card-body">
+                                            <h5 class="card-title" id="{{ test.id }}">{{ test.name }}</h5>
+                                            <p class="card-text">{{ test.description }}</p>
+<!--                                            <button type="submit" value="Submit" class="btn btn-primary">Start test</button>-->
+<!--                                            <button type="submit" value="Comment" class="btn btn-outline-primary">Comment</button>-->
+                                            <button type="submit" onclick="submitForm('Submit', {{ test.id }})" class="btn btn-primary">Start test</button>
+                                            <button type="submit" onclick="submitForm('Comment', {{ test.id }})" class="btn btn-outline-primary">Comment</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                <!-- row -->
+                <div class="row">
+                    <!-- pagination -->
+                    <div class="col-md-12">
+                        <div class="post-pagination">
+                            {% if previous %}
+                            <a href="?page={{ previous }}" class="pagination-back">Back</a>
+                            {% endif %}
+                            <ul class="pages">
+                                {% for page in page_list %}
+                                    {% if page == page_number %}
+                                        <li class="active"><a href="?page={{ page }}">{{ page }}</a></li>
+                                    {% else %}
+                                        <li><a href="?page={{ page }}">{{ page }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                            {% if next %}
+                            <a href="?page={{ next }}" class="pagination-next">Next</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <!-- pagination -->
+                </div>
+                <!-- /row -->
+            </div>
+            <!-- /main blog -->
+
+            <!-- aside blog -->
+            <div id="aside" class="col-md-3">
+                <!-- search widget -->
+                <div class="widget search-widget">
+                    <form>
+                        <input class="input" type="text" name="search">
+                        <button><i class="fa fa-search"></i></button>
+                    </form>
+                </div>
+                <!-- /search widget -->
+
+                <!-- category widget -->
+                <div class="widget category-widget">
+                    <h3>Categories</h3>
+                    <a class="category" href="#">Web <span>12</span></a>
+                    <a class="category" href="#">Css <span>5</span></a>
+                    <a class="category" href="#">Wordpress <span>24</span></a>
+                    <a class="category" href="#">Html <span>78</span></a>
+                    <a class="category" href="#">Business <span>36</span></a>
+                </div>
+                <!-- /category widget -->
+
+                <!-- posts widget -->
+                <div class="widget posts-widget">
+                    <h3>Recents Posts</h3>
+
+                    <!-- single posts -->
+                    <div class="single-post">
+                        <a class="single-post-img" href="blog-post.html">
+                            <img src="{% static 'core/img/post01.jpg' %}" alt="">
+                        </a>
+                        <a href="blog-post.html">Pro eu error molestie deserunt.</a>
+                        <p><small>By : John Doe .18 Oct, 2017</small></p>
+                    </div>
+                    <!-- /single posts -->
+
+                    <!-- single posts -->
+                    <div class="single-post">
+                        <a class="single-post-img" href="blog-post.html">
+                            <img src="{% static 'core/img/post02.jpg' %}" alt="">
+                        </a>
+                        <a href="blog-post.html">Pro eu error molestie deserunt.</a>
+                        <p><small>By : John Doe .18 Oct, 2017</small></p>
+                    </div>
+                    <!-- /single posts -->
+
+                    <!-- single posts -->
+                    <div class="single-post">
+                        <a class="single-post-img" href="blog-post.html">
+                            <img src="{% static 'core/img/post03.jpg' %}" alt="">
+                        </a>
+                        <a href="blog-post.html">Pro eu error molestie deserunt.</a>
+                        <p><small>By : John Doe .18 Oct, 2017</small></p>
+                    </div>
+                    <!-- /single posts -->
+
+                </div>
+                <!-- /posts widget -->
+
+                <!-- tags widget -->
+                <div class="widget tags-widget">
+                    <h3>Tags</h3>
+                    <a class="tag" href="#">Web</a>
+                    <a class="tag" href="#">Photography</a>
+                    <a class="tag" href="#">Css</a>
+                    <a class="tag" href="#">Responsive</a>
+                    <a class="tag" href="#">Wordpress</a>
+                    <a class="tag" href="#">Html</a>
+                    <a class="tag" href="#">Website</a>
+                    <a class="tag" href="#">Business</a>
+                </div>
+                <!-- /tags widget -->
+            </div>
+            <!-- /aside blog -->
+        </div>
+        <!-- row -->
+        <div class="modal fade" id="alertComment" tabindex="-1" aria-labelledby="continueTest" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Comment</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>You must finish this test at least one in order to comment</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="cancel">Oke</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- container -->
+
+</div>
+<!-- /Blog -->
+<script src="{% static 'test/js/mark-favour.js' %}"></script>
+<script src="{% static 'test/js/search-test.js' %}"></script>
+<script src="{% static 'test/js/check-comment.js' %}"></script>
+<style>
+    .favorite-star.favorited svg {
+        fill: yellow;
+    }
+
+    .favorite-star {
+        fill: None;
+    }
+
+    @media screen and (max-width: 1200px) {
+        .card {
+            width: 19rem; /* The width is 100%, when the viewport is 1200px or smaller */
+        }
+
+        .btn-outline-primary {
+            margin-top: 5px;
+        }
+    }
+
+    @media screen and (max-width: 950px) {
+        .card {
+            width: 15rem; /* The width is 100%, when the viewport is 950px or smaller */
+        }
+
+        .btn-outline-primary {
+            margin-top: 5px;
+        }
+    }
+
+    @media screen and (min-width: 1200px) {
+        .card {
+            width: 24rem;
+        }
+    }
+</style>
+{% endblock %}

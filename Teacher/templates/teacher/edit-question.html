@@ -1,0 +1,104 @@
+{% extends 'teacher/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+
+{% block title %} Edit Question {% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <input type="hidden" id="id-question" value="{{ question.id }}">
+    <h1 class="h3 mb-3 text-gray-800">Edit Question</h1>
+    <div class="mb-3">
+        <label for="inputSubject">Subject</label>
+        <select class="form-control" name="inputSubject" id="inputSubject">
+            {% for subject in all_subject %}
+            {% if question.id_subject == subject.id %}
+            <option id="{{ subject.id }}" selected>{{ subject.type }}</option>
+            {% else %}
+            <option id="{{ subject.id }}">{{ subject.type }}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+    <div class="card mb-4" style="width: 100%; margin: auto">
+        <div class="card-body">
+            <div class="form-group question">
+                <label for="questionName">Question</label>
+                <textarea class="form-control name" id="questionName" rows="2">{{ question.rtf }}</textarea>
+                <div class="mt-3">
+                    {% for choice in all_choice %}
+                    <h6 class="ml-4">Answer {{ forloop.counter }}</h6>
+                    <div class="mb-3 d-flex align-items-center">
+                        <div class="form-check">
+                            {% if choice.is_true %}
+                                <input class="form-check-input" type="radio" name="answerRadio" id="radio-{{ choice.id }}" value="{{ choice.id }}" checked="checked">
+                            {% else %}
+                                <input class="form-check-input" type="radio" name="answerRadio" id="radio-{{ choice.id }}" value="{{ choice.id }}">
+                            {% endif %}
+                        </div>
+                        <input type="text" class="form-control answer ml-2" id="{{ choice.id }}" placeholder="Answer" value="{{ choice.rtf }}">
+                    </div>
+                    {% endfor %}
+                </div>
+                <h6 class="">Hint</h6>
+                <textarea class="form-control hint" id="hintQuestion" rows="2" placeholder="Hint">{{ hint.rtf|safe }}</textarea>
+                <h6 class="mt-3">Solution</h6>
+                <textarea class="form-control hint mt-3" id="solutionQuestion" rows="2" placeholder="Solution">{{ solution.rtf|safe }}</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="align-items-center">
+        <div class="form-check">
+            {% if question.is_active %}
+            <input class="form-check-input" type="checkbox" value="" id="checkActive" checked>
+            {% else %}
+            <input class="form-check-input" type="checkbox" value="" id="checkActive">
+            {% endif %}
+            <label class="form-check-label" for="checkActive">
+                Active
+            </label>
+        </div>
+    </div>
+    <div class="mt-4 mb-4">
+        <button class="btn btn-primary" onclick="editQuestion()">Save</button>
+        <button class="btn btn-danger ml-2" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+    </div>
+    <div class="modal fade" id="statusSuccessModal" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center p-lg-4">
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                        <circle class="path circle" fill="none" stroke="#198754" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1" />
+                        <polyline class="path check" fill="none" stroke="#198754" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 " />
+                    </svg>
+                    <h4 class="text-success mt-3">Oh Yeah!</h4>
+                    <p class="mt-3">You have successfully updated the question</p>
+                    <button type="button" class="btn btn-sm mt-3 btn-secondary" data-bs-dismiss="modal" id="backButton">Back</button>
+                    <button type="button" class="btn btn-sm mt-3 btn-success" data-bs-dismiss="modal" id="okButton">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Delete Question</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure want to delete this question?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" onclick="deleteQuestion()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<link href="{% static 'teacher/css/modal.css' %}" rel="stylesheet" type="text/css">
+<script src="{% static 'teacher/js/question/edit-question.js' %}"></script>
+{% endblock %}

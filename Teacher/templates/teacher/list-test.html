@@ -1,0 +1,114 @@
+{% extends 'teacher/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+
+{% block title %} List of Tests {% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Test Table</h1>
+<!--    <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.-->
+<!--        For more information about DataTables, please visit the <a target="_blank" href="https://datatables.net">official DataTables documentation</a>.</p>-->
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <div class="input-group col-md-10">
+                <div class="form-outline" data-mdb-input-init>
+                    <input type="search" id="searchTest" class="form-control" placeholder="Search Test.."/>
+                </div>
+<!--                <button type="button" class="btn" data-mdb-ripple-init>-->
+<!--                    <i class="fas fa-search"></i>-->
+<!--                </button>-->
+                <div class="ml-3">
+                    <select id="selectSubject" class="selectpicker form-control" multiple
+                            data-selected-text-format="count" aria-label="Default select example"
+                            data-live-search="true">
+                        {% for subject in all_subject %}
+                        <option value="{{ subject.type }}">{{ subject.type }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="ml-3">
+                    <select class="form-select" id="selectMode" aria-label="Select Mode">
+                        <option value="" selected>Mode</option>
+                        <option value="Test">Test</option>
+                        <option value="Practice">Practice</option>
+                    </select>
+                </div>
+                <div class="ml-3">
+                    <select class="form-select" id="selectActive" aria-label="Select Active">
+                        <option value="" selected>Active</option>
+                        <option value="On">On</option>
+                        <option value="Off">Off</option>
+                    </select>
+                </div>
+                <div class="ml-3 form-inline">
+<!--                    <label for="selectNum">Show</label>-->
+                    <select id="selectNum" class="selectpicker form-control" aria-label="Default select example">
+                        <option value="5" selected>5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <a class="btn btn-primary w-100" role="button" href="{% url 'Teacher:CreateTestView' %}">Create Test</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Duration</th>
+                        <th>Subject</th>
+                        <th>Mode</th>
+                        <th>Created at</th>
+                        <th>Active</th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Duration</th>
+                        <th>Subject</th>
+                        <th>Mode</th>
+                        <th>Created at</th>
+                        <th>Active</th>
+                    </tr>
+                    </tfoot>
+                    <tbody id="dataTest">
+                    {% for test in all_test %}
+                    <tr class="table-row" data-subject="{{ test.subject }}" data-mode="{{ test.mode }}" data-active="{{ test.is_active }}">
+                        <td><a href="{% url 'Teacher:EditTestView' test.id %}">{{ test.name }}</a></td>
+                        <td>{{ test.description }}</td>
+                        <td>{{ test.duration }}</td>
+                        <td>{{ test.subject }}</td>
+                        <td>{{ test.mode }}</td>
+                        <td>{{ test.created_at }}</td>
+                        <td>{{ test.is_active }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-end">
+                    </ul>
+                    <input type="hidden" id="page_list" value="{{ page_list|length }}">
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<script src="{% static 'teacher/js/test/filter-test.js' %}"></script>-->
+<script src="{% static 'teacher/js/test/ajax-pagination.js' %}"></script>
+{% endblock %}

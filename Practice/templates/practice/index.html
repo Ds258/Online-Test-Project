@@ -1,0 +1,184 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+
+{% block title %} Test {% endblock %}
+
+{% block content %}
+<!-- Hero-area -->
+<div class="hero-area section">
+    <!-- Background Image -->
+    <div class="bg-image bg-parallax overlay"
+         style="background-image:url({% static 'core/img/page-background.jpg' %})"></div>
+    <!-- /Background Image -->
+    <div class="container" style="position: relative; z-index: 1;">
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-md-offset-1 text-center">
+                <ul class="hero-area-tree">
+                    <li><a href="/">Home</a></li>
+                    <li>Practice</li>
+                </ul>
+                <h1 class="white-text">Practice</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Hero-area -->
+<!-- Blog -->
+<div id="blog" class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <!-- main blog -->
+            <div id="main" class="col-md-9">
+                <div class="mb-3 row d-flex">
+                    <!-- Search form -->
+                    <div class="col-md-6">
+                        <input class="form-control" id="searchTest" type="text" placeholder="Search" aria-label="Search">
+                    </div>
+                    <div class="col-md-3">
+                        <select id="selectSubject" class="selectpicker form-control" multiple
+                                data-selected-text-format="count" aria-label="Default select example"
+                                data-live-search="true">
+                            {% for subject in subject %}
+                            <option data-tokens="{{ subject.type }}" value="{{ subject.type }}">{{ subject.type }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% if request.user.is_authenticated %}
+                    <div class="col-md-3 d-flex align-items-center">
+                        <input style="margin-right: 5px;" type="checkbox" id="favorite" name="favorite" value="Bike">
+                        <label for="favorite">Favorite</label><br>
+                    </div>
+                    {% endif %}
+                </div>
+                <!-- row -->
+                <div class="row">
+                    {% for test in context.test %}
+                    {% if test.is_active %}
+                    <div class="col-md-6">
+                        <div class="single-blog">
+                            <div class="col-lg-4 mb-4">
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="test_name" value="{{ test.name }}">
+                                    <div class="card" style="width: 24rem;">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ test.name }}</h5>
+                                            <p class="card-text">{{ test.description }}</p>
+                                            <button type="submit" value="Submit" class="btn btn-primary">Start test
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                <!-- row -->
+                <div class="row">
+                    <!-- pagination -->
+                    <div class="col-md-12">
+                        <div class="post-pagination">
+                            <a href="#" class="pagination-back pull-left">Back</a>
+                            <ul class="pages">
+                                <li class="active">1</li>
+                                <li><a href="#">2</a></li>
+                                <li><a href="#">3</a></li>
+                                <li><a href="#">4</a></li>
+                            </ul>
+                            <a href="#" class="pagination-next pull-right">Next</a>
+                        </div>
+                    </div>
+                    <!-- pagination -->
+                </div>
+                <!-- /row -->
+            </div>
+            <!-- /main blog -->
+
+            <!-- aside blog -->
+            <div id="aside" class="col-md-3">
+                <!-- search widget -->
+                <div class="widget search-widget">
+                    <form>
+                        <input class="input" type="text" name="search">
+                        <button><i class="fa fa-search"></i></button>
+                    </form>
+                </div>
+                <!-- /search widget -->
+
+                <!-- category widget -->
+                <div class="widget category-widget">
+                    <h3>Categories</h3>
+                    <a class="category" href="#">Web <span>12</span></a>
+                    <a class="category" href="#">Css <span>5</span></a>
+                    <a class="category" href="#">Wordpress <span>24</span></a>
+                    <a class="category" href="#">Html <span>78</span></a>
+                    <a class="category" href="#">Business <span>36</span></a>
+                </div>
+                <!-- /category widget -->
+
+                <!-- posts widget -->
+                <div class="widget posts-widget">
+                    <h3>Recents Posts</h3>
+
+                    <!-- single posts -->
+                    <div class="single-post">
+                        <a class="single-post-img" href="blog-post.html">
+                            <img src="./img/post01.jpg" alt="">
+                        </a>
+                        <a href="blog-post.html">Pro eu error molestie deserunt.</a>
+                        <p><small>By : John Doe .18 Oct, 2017</small></p>
+                    </div>
+                    <!-- /single posts -->
+
+                    <!-- single posts -->
+                    <div class="single-post">
+                        <a class="single-post-img" href="blog-post.html">
+                            <img src="./img/post02.jpg" alt="">
+                        </a>
+                        <a href="blog-post.html">Pro eu error molestie deserunt.</a>
+                        <p><small>By : John Doe .18 Oct, 2017</small></p>
+                    </div>
+                    <!-- /single posts -->
+
+                    <!-- single posts -->
+                    <div class="single-post">
+                        <a class="single-post-img" href="blog-post.html">
+                            <img src="./img/post03.jpg" alt="">
+                        </a>
+                        <a href="blog-post.html">Pro eu error molestie deserunt.</a>
+                        <p><small>By : John Doe .18 Oct, 2017</small></p>
+                    </div>
+                    <!-- /single posts -->
+
+                </div>
+                <!-- /posts widget -->
+
+                <!-- tags widget -->
+                <div class="widget tags-widget">
+                    <h3>Tags</h3>
+                    <a class="tag" href="#">Web</a>
+                    <a class="tag" href="#">Photography</a>
+                    <a class="tag" href="#">Css</a>
+                    <a class="tag" href="#">Responsive</a>
+                    <a class="tag" href="#">Wordpress</a>
+                    <a class="tag" href="#">Html</a>
+                    <a class="tag" href="#">Website</a>
+                    <a class="tag" href="#">Business</a>
+                </div>
+                <!-- /tags widget -->
+            </div>
+            <!-- /aside blog -->
+        </div>
+        <!-- row -->
+    </div>
+    <!-- container -->
+
+</div>
+<!-- /Blog -->
+{% endblock %}

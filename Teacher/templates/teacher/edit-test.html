@@ -1,0 +1,144 @@
+{% extends 'teacher/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+
+{% block title %} Edit Test {% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <input type="hidden" id="id-test" value="{{ test.id }}">
+    <h1 class="h3 mb-2 text-gray-800">Edit Test</h1>
+    <div class="form-group">
+        <label for="nameTestInput">Test Name</label>
+        <input type="text" class="form-control" id="nameTestInput" aria-describedby="nameHelp" placeholder="Enter test name" value="{{ test.name }}">
+    </div>
+    <div class="form-group">
+        <label for="descriptionTextarea">Description</label>
+        <textarea class="form-control" id="descriptionTextarea" rows="3">{{ test.description }}</textarea>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label for="inputSubject">Subject</label>
+            <select class="form-control" name="inputSubject" id="inputSubject">
+                {% for subject in all_subject %}
+                {% if test.id_subject == subject.id %}
+                <option id="{{ subject.id }}" selected>{{ subject.type }}</option>
+                {% else %}
+                <option id="{{ subject.id }}">{{ subject.type }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col" id="numQues">
+            <label for="numberOfQuestions">Number of Questions</label>
+            <input type="text" class="form-control" aria-describedby="numHelp" id="numberOfQuestions" placeholder="Number of Questions" value="{{ test.numbers_of_questions }}">
+            <small id="numHelp" class="form-text text-muted" style="color: red!important;"></small>
+        </div>
+        <div class="col">
+            <label for="timeDuration">Duration</label>
+            <input type="text" class="form-control" aria-describedby="timeHelp" id="timeDuration" placeholder="Duration" value="{{ test.duration }}">
+            <small id="timeHelp" class="form-text text-muted">Format - HH:MM:SS. Example - 00:30:00</small>
+        </div>
+    </div>
+    <div class="align-items-center">
+        <div class="form-check d-inline">
+            {% if test.is_practice %}
+            <input class="form-check-input" type="checkbox" value="" id="checkPractice" checked>
+            {% else %}
+            <input class="form-check-input" type="checkbox" value="" id="checkPractice">
+            {% endif %}
+            <label class="form-check-label" for="checkPractice">
+                Practice
+            </label>
+        </div>
+        <div class="form-check d-inline ml-3">
+            {% if test.is_active %}
+            <input class="form-check-input" type="checkbox" value="" id="checkActive" checked>
+            {% else %}
+            <input class="form-check-input" type="checkbox" value="" id="checkActive">
+            {% endif %}
+            <label class="form-check-label" for="checkActive">
+                Active
+            </label>
+        </div>
+    </div>
+<!--    <div class="mt-3">-->
+<!--        <select id="selectQuestion" class="selectpicker form-control" data-live-search="true">-->
+<!--        </select>-->
+<!--    </div>-->
+    <div class="mt-3">
+        <table id="questionTable" class="display">
+            <thead>
+                <tr>
+                    <th style="visible: false;"></th>
+                    <th>Question</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div class="card mt-3" id="selectedOption">
+        <div class="card-header">
+            Questions
+        </div>
+        <div style="overflow-y: auto; max-height: calc(50vh);" id="questionOption">
+            {% for question in all_question %}
+            <div id="question_{{ question.id }}" class="card-body d-flex justify-content-between">
+                <h6 id="{{ question.id }}" style="padding-right: 10px">{{ question.rtf|safe }}</h6>
+                <a id="deleteQuestion" class="mr-3 btn btn-danger" role="button" style="height: 40px; width: 40px;">
+                    <i style="color: white;" class="fa fa-trash"></i>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="mb-3 mt-3">
+        <button class="btn btn-primary" onclick="editTest()">Save Test</button>
+        <button class="btn btn-primary ml-2" onclick="updateQuestions()">Save Questions</button>
+        <button class="btn btn-danger ml-2" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+    </div>
+
+    <div class="modal fade" id="statusSuccessModal" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center p-lg-4">
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                        <circle class="path circle" fill="none" stroke="#198754" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1" />
+                        <polyline class="path check" fill="none" stroke="#198754" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 " />
+                    </svg>
+                    <h4 class="text-success mt-3">Oh Yeah!</h4>
+                    <p class="mt-3">You have successfully updated the test</p>
+                    <button type="button" class="btn btn-sm mt-3 btn-secondary" data-bs-dismiss="modal" id="backButton">Back</button>
+                    <button type="button" class="btn btn-sm mt-3 btn-success" data-bs-dismiss="modal" id="okButton">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Delete Question</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure want to delete this test?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" onclick="deleteTest()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/dataTables.buttons.js"></script>
+<script src="https://editor.datatables.net/extensions/Editor/js/dataTables.editor.js"></script>
+<link href="{% static 'teacher/css/modal.css' %}" rel="stylesheet" type="text/css">
+<script src="{% static 'teacher/js/test/edit-test.js' %}"></script>
+<script src="{% static 'teacher/js/test/select-question.js' %}"></script>
+{% endblock %}

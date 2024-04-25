@@ -1,0 +1,83 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+{% block title %} {{ this_test.name }} {% endblock %}
+
+{% block content %}
+<div class="container mt-3 position-relative">
+    <input type="hidden" id="id-do-test" value="{{ id_do_test }}">
+    <input type="hidden" id="test-id" value="{{ this_test.id }}">
+    <div class="text-center">
+        <h3>{{ this_test.name }}</h3>
+    </div>
+    <div class="d-block mx-auto justify-content-center " id="test">
+        {% for question in all_question %}
+        <div class="card mb-4" style="width: 100%; margin: auto">
+            <div class="card-body">
+                <h5 class="card-title">{{ question.rtf|safe }}</h5>
+                <div class="row align-items-start">
+                    {% for key, value in all_choice.items %}
+                    {% if key == question.id %} <!-- Check if the choices belong to its question -->
+                    {% for choice in value %} <!-- Value is a QuerySet, using for to separate it -->
+                    <div class="form-check col-6">
+                        <input class="form-check-input" type="radio"
+                               name="{{ this_test.id }}--{{ question.name }}--{{ question.id }}"
+                               id="{{ choice.id }}" value="{{ choice.id }}">
+                        <label class="form-check-label" for="{{ choice.id }}">
+                            {{ choice.rtf|safe }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% for key, value in all_hint.items %}
+            {% if key == question.id %}
+            {% for hint in value %}
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne" style="margin-top: 0">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#hint-{{ hint.id }}-{{ hint.id_question }}" aria-expanded="true" aria-controls="hint-{{ hint.id }}-{{ hint.id_question }}">
+                            Hint
+                        </button>
+                    </h2>
+                    <div id="hint-{{ hint.id }}-{{ hint.id_question }}" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                         data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            {{ hint.rtf|safe }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endfor %}
+        <div>
+            <button class="btn btn-danger" id="finish" onclick="sendAnswer()">Finish Test</button>
+        </div>
+        <div id="result"></div>
+        <div id="timer" tabindex="-1" class="bg-light p-2 text-center position-fixed top-0 end-0 mt-5"
+             style="width: 100px; font-size: 20px; font-weight: bold;"
+             data-duration="{{ this_test.duration }}"></div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="TimeAlert" aria-hidden="true" id="modal">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Alert</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="contentAlert">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'practice/js/ajax.js' %}"></script>
+<script src="{% static 'practice/js/test.js' %}"></script>
+{% endblock %}

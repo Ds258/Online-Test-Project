@@ -1,0 +1,234 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+{% block title %} Edit Profile {% endblock %}
+
+{% block content %}
+<div class="container p-0 mt-3">
+    <div class="row">
+        <div class="col-md-5 col-xl-4">
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Profile Settings</h5>
+                </div>
+
+                <div class="list-group list-group-flush" role="tablist">
+                    <a class="list-group-item list-group-item-action active" data-bs-toggle="list" href="#account"
+                       role="tab">
+                        Account
+                    </a>
+                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#password" role="tab">
+                        Password
+                    </a>
+                    <a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
+                        Privacy and safety
+                    </a>
+                    <a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
+                        Email notifications
+                    </a>
+                    <a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
+                        Web notifications
+                    </a>
+                    <a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
+                        Widgets
+                    </a>
+                    <a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
+                        Your data
+                    </a>
+                    <a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
+                        Delete account
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-7 col-xl-8">
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="account" role="tabpanel">
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-actions float-right">
+                                <div class="dropdown show">
+                                    <a href="#" data-toggle="dropdown" data-display="static">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                             stroke-linecap="round" stroke-linejoin="round"
+                                             class="feather feather-more-horizontal align-middle">
+                                            <circle cx="12" cy="12" r="1"></circle>
+                                            <circle cx="19" cy="12" r="1"></circle>
+                                            <circle cx="5" cy="12" r="1"></circle>
+                                        </svg>
+                                    </a>
+
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a class="dropdown-item" href="#">Action</a>
+                                        <a class="dropdown-item" href="#">Another action</a>
+                                        <a class="dropdown-item" href="#">Something else here</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <h5 class="card-title mb-0">Your Account</h5>
+                        </div>
+                        <div class="card-body">
+                            <form action="" method="post" id="accountInfo-form">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="row">
+                                            <div class="form-group col-md-6 mb-3">
+                                                <label for="inputFirstName" class="mb-1">First name</label>
+                                                <input type="text" class="form-control" id="inputFirstName"
+                                                       name="inputFirstName"
+                                                       placeholder="First name" value="{{ request.user.first_name }}">
+                                            </div>
+                                            <div class="form-group col-md-6 mb-3">
+                                                <label for="inputLastName" class="mb-1">Last name</label>
+                                                <input type="text" class="form-control" id="inputLastName"
+                                                       name="inputLastName"
+                                                       placeholder="Last name" value="{{ request.user.last_name }}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="inputUsername" class="mb-1">Username</label>
+                                            <input type="text" class="form-control" id="inputUsername"
+                                                   name="inputUsername"
+                                                   placeholder="Username" value="{{ request.user.username }}">
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="inputEmail" class="mb-1">Email</label>
+                                            <input type="email" class="form-control" id="inputEmail" placeholder="Email"
+                                                   name="inputEmail" value="{{ request.user.email }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="text-center">
+                                            <img alt="{{ request.user.username }}"
+                                                 src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                                                 class="rounded-circle img-responsive mt-2" width="128" height="128">
+                                            <div class="mt-2">
+                                                <span class="btn btn-primary"><i class="fa fa-upload"></i></span>
+                                            </div>
+                                            <small>For best results, use an image at least 128px by 128px in .jpg
+                                                format</small>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <button type="submit" class="btn btn-primary" onclick="updateAccountInfo()">Save
+                                    changes
+                                </button>
+                            </form>
+
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-actions float-right">
+                                <div class="dropdown show">
+                                    <a href="#" data-toggle="dropdown" data-display="static">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                             stroke-linecap="round" stroke-linejoin="round"
+                                             class="feather feather-more-horizontal align-middle">
+                                            <circle cx="12" cy="12" r="1"></circle>
+                                            <circle cx="19" cy="12" r="1"></circle>
+                                            <circle cx="5" cy="12" r="1"></circle>
+                                        </svg>
+                                    </a>
+
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a class="dropdown-item" href="#">Action</a>
+                                        <a class="dropdown-item" href="#">Another action</a>
+                                        <a class="dropdown-item" href="#">Something else here</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <h5 class="card-title mb-0">Private info</h5>
+                        </div>
+                        <div class="card-body">
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="form-group col-md-6 mb-3">
+                                        <label for="inputDOB" class="mb-1">Date of Birth</label>
+                                        <input type="date" class="form-control" id="inputDOB" name="inputDOB"
+                                               placeholder="Date of Birth" value="{{ profile.dob }}">
+                                    </div>
+                                    <div class="form-group col-md-6 mb-3">
+                                        <label for="inputGender" class="mb-1">Gender</label>
+                                        <select class="form-control" name="inputGender" id="inputGender">
+                                            {% if profile.gender == 'Female' %}
+                                            <option value="Male">Male</option>
+                                            <option value="Female" selected>Female</option>
+                                            {% elif profile.gender == 'Male' %}
+                                            <option value="Male" selected>Male</option>
+                                            <option value="Female">Female</option>
+                                            {% else %}
+                                            <option value="" disabled selected>--Select your gender--</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="inputPhone" class="mb-1">Phone number</label>
+                                    <input type="text" class="form-control" id="inputPhone" placeholder="Phone number"
+                                           name="inputPhone" value="{{ profile.phone_number }}">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="inputSchool" class="mb-1">School</label>
+                                    <input type="text" class="form-control" id="inputSchool" placeholder="School"
+                                           name="inputSchool" value="{{ profile.school }}">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="inputAddress" class="mb-1">Address</label>
+                                    <input type="text" class="form-control" id="inputAddress"
+                                           name="inputAddress" placeholder="Vietnam" value="{{ profile.address }}">
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </form>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="tab-pane fade" id="password" role="tabpanel">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Password</h5>
+                            <form>
+                                <div class="form-group mb-3">
+                                    <label for="inputPasswordCurrent" class="mb-1">Current password</label>
+                                    <input type="password" class="form-control" id="inputPasswordCurrent"
+                                           name="inputPasswordCurrent">
+                                    <small><a href="#">Forgot your password?</a></small>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="inputPasswordNew" class="mb-1">New password</label>
+                                    <input type="password" class="form-control" id="inputPasswordNew"
+                                           name="inputPasswordNew">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="inputPasswordNew2" class="mb-1">Verify password</label>
+                                    <input type="password" class="form-control" id="inputPasswordNew2"
+                                           name="inputPasswordNew2">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="{% static 'user/css/edit.css' %}">
+<script src="{% static 'user/js/validate.js' %}"></script>
+{% endblock %}

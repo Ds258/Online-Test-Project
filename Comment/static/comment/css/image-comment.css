@@ -1,0 +1,25 @@
+.image-container {
+    position: relative;
+    display: inline-block;
+}
+
+.delete-button {
+    z-index: 1;
+    position: absolute;
+    right: 1em;
+    top: 1em;
+}
+
+/* Custom styling for slick-prev and slick-next arrows */
+.slick-prev {
+    margin-right: 5px;
+}
+
+.slick-next {
+    margin-left: 5px;
+}
+
+.image {
+    height: 15rem;
+    width: auto;
+}

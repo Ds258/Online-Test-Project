@@ -1,0 +1,86 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+{% block title %} {{ this_test.name }} {% endblock %}
+
+{% block content %}
+<div class="container mt-3 position-relative">
+    <input type="hidden" id="id-do-test" value="{{ id_do_test }}">
+    <input type="hidden" id="test-id" value="{{ this_test.id }}">
+    <div class="text-center">
+        <h3>{{ this_test.name }}</h3>
+    </div>
+    <div class="d-block mx-auto justify-content-center" id="test">
+        {% for question in all_question %}
+        <div class="card mb-4" style="width: 100%; margin: auto">
+            <div class="card-body">
+                <h5 class="card-title">{{ question.rtf|safe }}</h5>
+                <div class="row align-items-start">
+                    {% for key, value in all_choice.items %}
+                    {% if key == question.id %} <!-- Check if the choices belong to its question -->
+                    {% for choice in value %} <!-- Value is a QuerySet, using for to separate it -->
+                    <div class="form-check col-6">
+                        {% if choice.checked == True %}
+                        <input class="form-check-input" type="radio"
+                               name="{{ this_test.id }}--{{ question.name }}--{{ question.id }}"
+                               id="{{ choice.id }}" value="{{ choice.id }}" disabled checked>
+                        {% else %}
+                        <input class="form-check-input" type="radio"
+                               name="{{ this_test.id }}--{{ question.name }}--{{ question.id }}"
+                               id="{{ choice.id }}" value="{{ choice.id }}" disabled>
+                        {% endif %}
+                        {% if choice.is_true == True %}
+                        <label style="color: green!important;" class="form-check-label right-answer" for="{{ choice.id }}">
+                            {{ choice.rtf|safe }}
+                        </label>
+                        {% else %}
+                        <label style="color: red!important;" class="form-check-label wrong-answer" for="{{ choice.id }}">
+                            {{ choice.rtf|safe }}
+                        </label>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% for key, value in all_solution.items %}
+            {% if key == question.id %}
+            {% for solution in value %}
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne" style="margin-top: 0">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#solution-{{ solution.id }}-{{ solution.id_question }}" aria-expanded="true" aria-controls="solution-{{ solution.id }}-{{ solution.id_question }}">
+                            Solution
+                        </button>
+                    </h2>
+                    <div id="solution-{{ solution.id }}-{{ solution.id_question }}" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                         data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            {{ solution.rtf|safe }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endfor %}
+        <div>
+            <a role="button" class="btn btn-danger" id="finish" href="{% url 'User:ProfileIndexView' %}">Back</a>
+        </div>
+    </div>
+</div>
+<style>
+    .right-answer span {
+        color: green!important;
+    }
+
+    .wrong-answer span {
+        color: red!important;
+    }
+</style>
+{% endblock %}
